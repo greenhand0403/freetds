@@ -4694,6 +4694,12 @@ change_transaction(TDS_DBC * dbc, int state)
 		return SQL_ERROR;
 	}
 
+	if (dbc->current_statement) {
+		dbc->current_statement->tds = NULL;
+		dbc->current_statement = NULL;
+	}
+	tds_set_parent(tds, dbc);
+
 	if (TDS_FAILED(tds_process_simple_query(tds)))
 		return SQL_ERROR;
 
